@@ -1,0 +1,31 @@
+{
+  "name": "hypepass",
+  "version": "1.0.0",
+  "description": "A backend API for a modern event ticketing platform designed to make discovering, booking, and attending events effortless and enjoyable",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/olalekanali/HypePass.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/olalekanali/HypePass/issues"
+  },
+  "homepage": "https://github.com/olalekanali/HypePass#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
