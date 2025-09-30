@@ -11,7 +11,16 @@ exports.createEvent = async (req, res) => {
 
         // Create event using the input data
         const event = await Event.create({ title, description, date, venue, totalTickets, availableTickets: totalTickets, price, createdBy: req.user.id });
-        res.status(201).json(event);
+        res.status(201).json({
+            id: event._id,
+            title: event.title,
+            description: event.description,
+            venue: event.venue,
+            totalTickets: event.totalTickets,
+            availableTickets: event.availableTickets,
+            date: event.date,
+            price: event.price,
+        });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -87,8 +96,13 @@ exports.updateEvent = async (req, res) => {
         if (price) event.price = price;
 
         // Adjust availableTickets if totalTickets changed
-        if (totalTickets !== event.totalTickets) {
-            event.availableTickets = totalTickets - (event.totalTickets - event.availableTickets);
+        if (totalTickets && totalTickets !== event.totalTickets) {
+            const ticketsSold = event.totalTickets - event.availableTickets;
+            if (totalTickets < ticketsSold) {
+            return res.status(400).json({ message: 'Total tickets cannot be less than tickets already sold' });
+            }
+            event.availableTickets = totalTickets - ticketsSold;
+            event.totalTickets = totalTickets;
         }
 
         await event.save();
@@ -112,8 +126,9 @@ exports.deleteEvent = async (req, res) => {
             return res.status(403).json({ message: 'Unauthorized! Only event creators or admins can delete events.' });
         }
 
-        await event.remove();
-        res.status(204).json({ message: 'Event deleted successfully' });
+        // Delete the event
+        await event.deleteOne();
+        res.status(200).json({ message: 'Event deleted successfully' });
 
     } catch (error) {
         res.status(500).json({ message: error.message });
